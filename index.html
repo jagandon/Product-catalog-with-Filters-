@@ -1,1 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Innovative Store | Product Catalog</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* === BASIC STYLES === */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: 0.3s;
+    }
+    :root {
+      --bg: #f4f4f4;
+      --text: #333;
+      --card: #fff;
+      --accent: #3498db;
+    }
+    body.dark {
+      --bg: #1e1e1e;
+      --text: #eee;
+      --card: #2a2a2a;
+      --accent: #9b59b6;
+    }
+
+    /* === NAVIGATION === */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card);
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    nav h1 { color: var(--accent); font-size: 1.5rem; }
+    nav ul { display: flex; gap: 20px; list-style: none; }
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    nav a.active, nav a:hover { color: var(--accent); }
+    #theme-toggle {
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      cursor: pointer;
+    }
+
+    /* === MAIN CONTAINER === */
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    header { text-align: center; margin-bottom: 30px; }
+    header h2 { font-size: 2rem; color: var(--accent); }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 30px;
+    }
+
+    /* === FILTERS === */
+    .filters {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+
+    .filters h3 {
+      margin-bottom: 20px;
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 10px;
+    }
+
+    .filter-group { margin-bottom: 20px; }
+    .filter-group h4 { margin-bottom: 10px; color: var(--text); }
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .filter-group input, .filter-group select {
+      margin-right: 8px;
+    }
+
+    #reset-filters {
+      width: 100%;
+      padding: 10px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #reset-filters:hover { background-color: #c0392b; }
+
+    /* === PRODUCTS === */
+    .products {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .products-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    #sort-by {
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: var(--card);
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+
+    .product-category {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      font-weight: bold;
+      color: #e74c3c;
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+
+    .product-rating { color: #f39c12; }
+
+    /* === FOOTER === */
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      background: var(--card);
+    }
+
+    @media (max-width: 768px) {
+      .main-content { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>Innovative Store</h1>
+    <ul>
+      <li><a href="#" class="active">Products</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><button id="theme-toggle">🌙</button></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <header>
+      <h2>Product Catalog</h2>
+    </header>
+
+    <div class="main-content">
+      <!-- FILTERS -->
+      <aside class="filters">
+        <h3>Filters</h3>
+
+        <div class="filter-group">
+          <h4>Category</h4>
+          <label><input type="checkbox" value="electronics" checked> Electronics</label>
+          <label><input type="checkbox" value="clothing" checked> Clothing</label>
+          <label><input type="checkbox" value="books" checked> Books</label>
+          <label><input type="checkbox" value="home" checked> Home & Garden</label>
+        </div>
+
+        <div class="filter-group">
+          <h4>Price Range</h4>
+          <label><input type="radio" name="price" value="all" checked> All Prices</label>
+          <label><input type="radio" name="price" value="0-50"> $0 - $50</label>
+          <label><input type="radio" name="price" value="50-100"> $50 - $100</label>
+          <label><input type="radio" name="price" value="100-500"> $100 - $500</label>
+        </div>
+
+        <div class="filter-group">
+          <h4>Minimum Rating</h4>
+          <select id="rating-filter">
+            <option value="0">All Ratings</option>
+            <option value="4">4 Stars & Up</option>
+            <option value="3">3 Stars & Up</option>
+            <option value="2">2 Stars & Up</option>
+            <option value="1">1 Star & Up</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <h4>Search</h4>
+          <input type="text" id="search-input" placeholder="Search products...">
+        </div>
+
+        <button id="reset-filters">Reset Filters</button>
+      </aside>
+
+      <!-- PRODUCTS -->
+      <main class="products">
+        <div class="products-header">
+          <span id="product-count">12 products</span>
+          <select id="sort-by">
+            <option value="name">Sort by Name</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Rating</option>
+          </select>
+        </div>
+        <div class="products-grid" id="products-container"></div>
+      </main>
+    </div>
+  </div>
+
+  <footer>© 2025 Innovative Store</footer>
+
+  <script>
+    // === DARK MODE ===
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      themeToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    });
+
+    // === PRODUCT DATA ===
+    const products = [
+      { id:1,name:"Wireless Headphones",price:99.99,category:"electronics",rating:4.5,image:"https://i5.walmartimages.com/seo/Symphonized-Blast-Wireless-Bluetooth-Headphones-Mic-Ear-Headphones-Samsung-More-22-Playtime-Hours-Travel-Work-Deep-Bass-Headphones-Noise-Isolation-Re_78ff8e5b-5570-4eb2-8ca0-422e4a64d51e.a392ad46e96f707de61a5547318e70d1.jpeg?odnHeight=573&odnWidth=573&odnBg=FFFFFF"},
+      { id:2,name:"Cotton T-Shirt",price:24.99,category:"clothing",rating:4.2,image:"https://cdnp.sanmar.com/medias/424Wx635H-null?context=bWFzdGVyfGltYWdlc3w4Nzk4OXxpbWFnZS9qcGVnfGFEZGlMMmczTmk4eE5qWTNNamMzTnpVd01qYzFNQzgwTWpSWGVEWXpOVWhmYm5Wc2JBfDYzZDMxMjNlZDk0YjM3N2M3MDUxOGYxZjUyZjQ2ZTFkZTk2MzhhMzY4MWNjNzg4OTdlODZmODJlMGVmZDVlOTA"},
+      { id:3,name:"JavaScript Book",price:39.99,category:"books",rating:4.8,image:"https://tse2.mm.bing.net/th/id/OIP.mbZcKhol2WIRYCtsx33aLgHaGB?pid=Api&P=0&h=220"},
+      { id:4,name:"Smart Watch",price:199.99,category:"electronics",rating:4.3,image:"https://m.media-amazon.com/images/I/41APgGFuriL._SY300_SX300_QL70_FMwebp_.jpg"},
+      { id:5,name:"Coffee Maker",price:79.99,category:"home",rating:4.1,image:"https://m.media-amazon.com/images/I/81eXmViYcqL._AC_SY300_SX300_QL70_ML2_.jpg"},
+      { id:6,name:"Jeans",price:49.99,category:"clothing",rating:4.0,image:"https://inside-shops.com/915961-medium_default/jeans-mom-slim-cintura-alta.jpg"},
+      { id:7,name:"Python Programming",price:45.99,category:"books",rating:4.7,image:"https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1655001861i/61269877.jpg"},
+      { id:8,name:"Desk Lamp",price:29.99,category:"home",rating:4.4,image:"https://www.lightingstyles.co.uk/pics/12/grey-highly-adjustable-desk-table-lamp.jpg"},
+      { id:9,name:"Bluetooth Speaker",price:59.99,category:"electronics",rating:4.6,image:"https://i5.walmartimages.com/seo/Proscan-Elite-Light-up-360-Degree-Sound-Waterproof-IPX4-Bluetooth-Speaker-Dual-External-Passive-Radiators-Black-PESP1708_0a0a66f5-c66e-4b98-b43d-678929603a70.21453f3a6a7686969521d2190aa6d4f7.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF"},
+      { id:10,name:"Winter Jacket",price:89.99,category:"clothing",rating:4.3,image:"https://images-na.ssl-images-amazon.com/images/I/71xOOqWS8SL._AC_UX679_.jpg"},
+      { id:11,name:"Garden Tools Set",price:34.99,category:"home",rating:4.2,image:"https://m.media-amazon.com/images/I/71CTjecL1EL._AC_SY300_SX300_QL70_FMwebp_.jpg"},
+      { id:12,name:"Web Development Guide",price:55.99,category:"books",rating:4.9,image:"https://s3-eu-west-1.amazonaws.com/cover2.galileo-press.de/print/9781493224371_267_2d.png"}
+    ];
+
+    const container = document.getElementById('products-container');
+    const count = document.getElementById('product-count');
+    const search = document.getElementById('search-input');
+    const sort = document.getElementById('sort-by');
+    const ratingFilter = document.getElementById('rating-filter');
+    const reset = document.getElementById('reset-filters');
+
+    function display(list){
+      container.innerHTML = '';
+      list.forEach(p=>{
+        container.innerHTML += `
+          <div class="product-card">
+            <img src="${p.image}" class="product-image" alt="${p.name}">
+            <span class="product-category">${p.category}</span>
+            <h3>${p.name}</h3>
+            <div class="product-price">$${p.price}</div>
+            <div class="product-rating">⭐ ${p.rating}</div>
+          </div>`;
+      });
+      count.textContent = list.length + ' products';
+    }
+
+    function filterProducts(){
+      const checkedCats = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(c=>c.value);
+      const priceRange = document.querySelector('input[name="price"]:checked').value;
+      const minRating = parseFloat(ratingFilter.value);
+      const searchTerm = search.value.toLowerCase();
+
+      let filtered = products.filter(p=>{
+        if(!checkedCats.includes(p.category)) return false;
+        if(priceRange!=='all'){
+          const [min,max]=priceRange.split('-').map(Number);
+          if(p.price<min||p.price>max) return false;
+        }
+        if(p.rating<minRating) return false;
+        if(searchTerm && !p.name.toLowerCase().includes(searchTerm)) return false;
+        return true;
+      });
+
+      switch(sort.value){
+        case 'price-low': filtered.sort((a,b)=>a.price-b.price); break;
+        case 'price-high': filtered.sort((a,b)=>b.price-a.price); break;
+        case 'rating': filtered.sort((a,b)=>b.rating-a.rating); break;
+        default: filtered.sort((a,b)=>a.name.localeCompare(b.name));
+      }
+
+      display(filtered);
+    }
+
+    document.querySelectorAll('input, select').forEach(el=>el.addEventListener('change', filterProducts));
+    search.addEventListener('input', filterProducts);
+    reset.addEventListener('click', ()=>{
+      document.querySelectorAll('input[type="checkbox"]').forEach(c=>c.checked=true);
+      document.querySelector('input[name="price"][value="all"]').checked=true;
+      ratingFilter.value='0'; search.value=''; sort.value='name';
+      filterProducts();
+    });
+
+    display(products);
+  </script>
+</body>
+</html>
+
 
