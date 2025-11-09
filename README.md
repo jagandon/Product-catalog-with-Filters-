@@ -1,1 +1,2 @@
-# Product-catalog-with-Filters-
+# Product-Catalog-With-Filters
+Product Catalog With Filters
